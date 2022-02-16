@@ -1,0 +1,16 @@
+<package>
+  <description brief="plant_bot">
+     COMP0031_PlantBot
+  </description>
+  <author>lxsky</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/plant_bot</url>
+  <depend package="rospy"/>
+  <depend package="roscpp"/>
+  <depend package="std_msgs"/>
+  <exec_depend>amcl</exec_depend>
+  <exec_depend>map_server</exec_depend>
+  <exec_depend>move_base</exec_depend>
+  <exec_depend>gazebo</exec_depend>
+</package>
