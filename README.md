@@ -8,7 +8,7 @@ first export current directory into ROS_PACKAGE_PATH
 $ export ROS_PACKAGE_PATH=${ROS_PACKAGE_PATH}:$(pwd)
 ```
 
-then run the refresh the ros package index:
+then run the following command to refresh the ros package index:
 
 ```shell
 $ rospack profile
