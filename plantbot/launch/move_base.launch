@@ -10,13 +10,13 @@
     <param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS" />
     <!-- <param name="base_global_planner" value="some planner" /> -->
     
-    <rosparam file="$(find COMP0031_PlantBot)/param/costmap_common_params_$(arg model).yaml" command="load" ns="global_costmap" />
-    <rosparam file="$(find COMP0031_PlantBot)/param/costmap_common_params_$(arg model).yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find plantbot)/param/costmap_common_params_$(arg model).yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find plantbot)/param/costmap_common_params_$(arg model).yaml" command="load" ns="local_costmap" />
     
-    <rosparam file="$(find COMP0031_PlantBot)/param/local_costmap_params.yaml" command="load" />
-    <rosparam file="$(find COMP0031_PlantBot)/param/global_costmap_params.yaml" command="load" />
-    <rosparam file="$(find COMP0031_PlantBot)/param/move_base_params.yaml" command="load" />
-    <rosparam file="$(find COMP0031_PlantBot)/param/teb_local_planner_params.yaml" command="load" />
+    <rosparam file="$(find plantbot)/param/local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find plantbot)/param/global_costmap_params.yaml" command="load" />
+    <rosparam file="$(find plantbot)/param/move_base_params.yaml" command="load" />
+    <rosparam file="$(find plantbot)/param/teb_local_planner_params.yaml" command="load" />
     
     <remap from="cmd_vel" to="$(arg cmd_vel_topic)"/>
     <remap from="odom" to="$(arg odom_topic)"/>
