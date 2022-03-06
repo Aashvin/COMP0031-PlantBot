@@ -6295,7 +6295,7 @@
     </scene>
     <gui fullscreen='0'>
       <camera name='user_camera'>
-        <pose>-5.13344 0.30929 22.503 -0 1.4338 -0.001722</pose>
+        <pose>-3.87825 1.21457 15.9418 0 1.5058 0.011091</pose>
         <view_controller>orbit</view_controller>
         <projection_type>perspective</projection_type>
       </camera>
@@ -6312,85 +6312,85 @@
       <heading_deg>0</heading_deg>
     </spherical_coordinates>
     <state world_name='default'>
-      <sim_time>302 186000000</sim_time>
-      <real_time>187 882239700</real_time>
-      <wall_time>1646583500 476572900</wall_time>
-      <iterations>178730</iterations>
+      <sim_time>485 497000000</sim_time>
+      <real_time>191 601384800</real_time>
+      <wall_time>1646585755 812639400</wall_time>
+      <iterations>183311</iterations>
+      <model name='WestElmIris'>
+        <pose>-1.32599 4.58829 -0.421608 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name='link'>
+          <pose>-1.32599 4.58829 -0.421608 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='WestElmIris_clone'>
+        <pose>6.04217 3.34442 -0.421608 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name='link'>
+          <pose>6.04217 3.34442 -0.421608 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='WestElmIris_clone_0'>
+        <pose>6.14975 0.191486 -0.421608 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name='link'>
+          <pose>6.14975 0.191486 -0.421608 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='WestElmIris_clone_1'>
+        <pose>4.54769 -4.88524 -0.421608 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name='link'>
+          <pose>4.54769 -4.88524 -0.421608 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='WestElmIris_clone_2'>
+        <pose>-5.39926 0.065334 -0.421608 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name='link'>
+          <pose>-5.39926 0.065334 -0.421608 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='WestElmIris_clone_3'>
+        <pose>-7.87828 -3.67553 -0.421608 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name='link'>
+          <pose>-7.87828 -3.67553 -0.421608 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='WestElmIris_clone_4'>
+        <pose>-6.61784 -3.64617 -0.421608 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name='link'>
+          <pose>-6.61784 -3.64617 -0.421608 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
       <model name='ground_plane'>
         <pose>0 0 0 0 -0 0</pose>
         <scale>1 1 1</scale>
         <link name='link'>
           <pose>0 0 0 0 -0 0</pose>
-          <velocity>0 0 0 0 -0 0</velocity>
-          <acceleration>0 0 0 0 -0 0</acceleration>
-          <wrench>0 0 0 0 -0 0</wrench>
-        </link>
-      </model>
-      <model name='my_mesh'>
-        <pose>-5.05489 0.577485 -0.371639 0 -0 0</pose>
-        <scale>1 1 1</scale>
-        <link name='link'>
-          <pose>-5.05489 0.577485 -0.371639 0 -0 0</pose>
-          <velocity>0 0 0 0 -0 0</velocity>
-          <acceleration>0 0 0 0 -0 0</acceleration>
-          <wrench>0 0 0 0 -0 0</wrench>
-        </link>
-      </model>
-      <model name='my_mesh_clone'>
-        <pose>-7.32643 -3.2293 -0.371639 0 -0 0</pose>
-        <scale>1 1 1</scale>
-        <link name='link'>
-          <pose>-7.32643 -3.2293 -0.371639 0 -0 0</pose>
-          <velocity>0 0 0 0 -0 0</velocity>
-          <acceleration>0 0 0 0 -0 0</acceleration>
-          <wrench>0 0 0 0 -0 0</wrench>
-        </link>
-      </model>
-      <model name='my_mesh_clone_0'>
-        <pose>-6.33524 -3.03598 -0.371639 0 0 -2.55331</pose>
-        <scale>1 1 1</scale>
-        <link name='link'>
-          <pose>-6.33524 -3.03598 -0.371639 0 0 -2.55331</pose>
-          <velocity>0 0 0 0 -0 0</velocity>
-          <acceleration>0 0 0 0 -0 0</acceleration>
-          <wrench>0 0 0 0 -0 0</wrench>
-        </link>
-      </model>
-      <model name='my_mesh_clone_1'>
-        <pose>6.57486 3.43145 -0.371639 0 -0 0</pose>
-        <scale>1 1 1</scale>
-        <link name='link'>
-          <pose>6.57486 3.43145 -0.371639 0 -0 0</pose>
-          <velocity>0 0 0 0 -0 0</velocity>
-          <acceleration>0 0 0 0 -0 0</acceleration>
-          <wrench>0 0 0 0 -0 0</wrench>
-        </link>
-      </model>
-      <model name='my_mesh_clone_2'>
-        <pose>5.0528 -4.46929 -0.371639 0 -0 0</pose>
-        <scale>1 1 1</scale>
-        <link name='link'>
-          <pose>5.0528 -4.46929 -0.371639 0 -0 0</pose>
-          <velocity>0 0 0 0 -0 0</velocity>
-          <acceleration>0 0 0 0 -0 0</acceleration>
-          <wrench>0 0 0 0 -0 0</wrench>
-        </link>
-      </model>
-      <model name='my_mesh_clone_3'>
-        <pose>6.56133 0.626193 -0.371639 0 -0 0</pose>
-        <scale>1 1 1</scale>
-        <link name='link'>
-          <pose>6.56133 0.626193 -0.371639 0 -0 0</pose>
-          <velocity>0 0 0 0 -0 0</velocity>
-          <acceleration>0 0 0 0 -0 0</acceleration>
-          <wrench>0 0 0 0 -0 0</wrench>
-        </link>
-      </model>
-      <model name='my_mesh_clone_4'>
-        <pose>-1.06872 4.87452 -0.371639 0 -0 0</pose>
-        <scale>1 1 1</scale>
-        <link name='link'>
-          <pose>-1.06872 4.87452 -0.371639 0 -0 0</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 0 0 -0 0</acceleration>
           <wrench>0 0 0 0 -0 0</wrench>
@@ -6529,7 +6529,7 @@
           <pose>0.478189 -0.352762 0 0 0 -3.14159</pose>
           <scale>1 1 1</scale>
           <link name='link'>
-            <pose>0.478189 -0.352762 0 -2e-06 2e-06 -3.14159</pose>
+            <pose>0.478189 -0.352762 0 1e-06 -4e-06 -3.14159</pose>
             <velocity>0 0 0 0 -0 0</velocity>
             <acceleration>0 0 -9.8 0 -0 0</acceleration>
             <wrench>0 0 -9.8 0 -0 0</wrench>
@@ -6619,27 +6619,27 @@
           <pose>1.47819 2.1354 0 0 -0 0</pose>
           <scale>1 1 1</scale>
           <link name='link'>
-            <pose>1.4782 2.13539 -1e-06 -8e-06 6e-06 -6.7e-05</pose>
+            <pose>1.4782 2.13538 -3e-06 -5e-06 6e-06 -6.7e-05</pose>
             <velocity>0 0 0 0 -0 0</velocity>
-            <acceleration>3.01506 -0.519108 -2.38743 -2.39607 0.403361 -2.40876</acceleration>
-            <wrench>14.565 -2.50769 -11.5331 0 -0 0</wrench>
+            <acceleration>-1.46948 -0.680588 -5.89999 -1.29367 0.84833 3.14158</acceleration>
+            <wrench>-7.0987 -3.28776 -28.5014 0 -0 0</wrench>
           </link>
         </model>
         <model name='first_2015_trash_can_0'>
           <pose>-5.09881 5.11786 0 0 -0 0</pose>
           <scale>1 1 1</scale>
           <link name='link'>
-            <pose>-5.09879 5.11786 1e-06 1.2e-05 2.6e-05 -6.7e-05</pose>
+            <pose>-5.09879 5.11786 -2e-06 1e-06 1.1e-05 -8.1e-05</pose>
             <velocity>0 0 0 0 -0 0</velocity>
-            <acceleration>-2.98353 0.430846 -2.52989 1.97178 -1.32408 -3.14158</acceleration>
-            <wrench>-14.4127 2.08131 -12.2213 0 -0 0</wrench>
+            <acceleration>3.44117 -0.71562 1.95755 -1.279 0.093102 -3.00444</acceleration>
+            <wrench>16.6235 -3.45699 9.45644 0 -0 0</wrench>
           </link>
         </model>
         <model name='table'>
           <pose>-3.06255 2.64723 0 0 -0 0</pose>
           <scale>1 1 1</scale>
           <link name='link'>
-            <pose>-3.06255 2.64723 -9e-06 0 -1e-06 0</pose>
+            <pose>-3.06255 2.64723 -1e-06 0 1e-06 0</pose>
             <velocity>0 0 0 0 -0 0</velocity>
             <acceleration>0 0 -9.8 0 -0 0</acceleration>
             <wrench>0 0 -9.8 0 -0 0</wrench>
@@ -6660,8 +6660,8 @@
         <pose>0 0 10 0 -0 0</pose>
       </light>
     </state>
-    <model name='my_mesh'>
-      <pose>-4.85192 0.74913 0.5 0 -0 0</pose>
+    <model name='WestElmIris'>
+      <pose>-2.03754 3.49333 0.5 0 -0 0</pose>
       <static>1</static>
       <link name='link'>
         <inertial>
@@ -6698,7 +6698,7 @@
         <visual name='visual'>
           <geometry>
             <mesh>
-              <uri>model://my_mesh/model.dae</uri>
+              <uri>model://WestElmIris/model.dae</uri>
             </mesh>
           </geometry>
         </visual>
@@ -6707,8 +6707,8 @@
         <kinematic>0</kinematic>
       </link>
     </model>
-    <model name='my_mesh_clone'>
-      <pose>-7.32643 -3.2293 -0.371639 0 -0 0</pose>
+    <model name='WestElmIris_clone'>
+      <pose>6.04217 3.34442 -0.421608 0 -0 0</pose>
       <static>1</static>
       <link name='link'>
         <inertial>
@@ -6745,7 +6745,7 @@
         <visual name='visual'>
           <geometry>
             <mesh>
-              <uri>model://my_mesh/model.dae</uri>
+              <uri>model://WestElmIris/model.dae</uri>
             </mesh>
           </geometry>
         </visual>
@@ -6754,8 +6754,8 @@
         <kinematic>0</kinematic>
       </link>
     </model>
-    <model name='my_mesh_clone_0'>
-      <pose>-6.43995 -3.21429 -0.371639 0 -0 0</pose>
+    <model name='WestElmIris_clone_0'>
+      <pose>6.14975 0.191486 -0.421608 0 -0 0</pose>
       <static>1</static>
       <link name='link'>
         <inertial>
@@ -6792,7 +6792,7 @@
         <visual name='visual'>
           <geometry>
             <mesh>
-              <uri>model://my_mesh/model.dae</uri>
+              <uri>model://WestElmIris/model.dae</uri>
             </mesh>
           </geometry>
         </visual>
@@ -6801,8 +6801,8 @@
         <kinematic>0</kinematic>
       </link>
     </model>
-    <model name='my_mesh_clone_1'>
-      <pose>6.57486 3.43145 -0.371639 0 -0 0</pose>
+    <model name='WestElmIris_clone_1'>
+      <pose>4.54769 -4.88524 -0.421608 0 -0 0</pose>
       <static>1</static>
       <link name='link'>
         <inertial>
@@ -6839,7 +6839,7 @@
         <visual name='visual'>
           <geometry>
             <mesh>
-              <uri>model://my_mesh/model.dae</uri>
+              <uri>model://WestElmIris/model.dae</uri>
             </mesh>
           </geometry>
         </visual>
@@ -6848,8 +6848,8 @@
         <kinematic>0</kinematic>
       </link>
     </model>
-    <model name='my_mesh_clone_2'>
-      <pose>5.0528 -4.46929 -0.371639 0 -0 0</pose>
+    <model name='WestElmIris_clone_2'>
+      <pose>-5.39926 0.065334 -0.421608 0 -0 0</pose>
       <static>1</static>
       <link name='link'>
         <inertial>
@@ -6886,7 +6886,7 @@
         <visual name='visual'>
           <geometry>
             <mesh>
-              <uri>model://my_mesh/model.dae</uri>
+              <uri>model://WestElmIris/model.dae</uri>
             </mesh>
           </geometry>
         </visual>
@@ -6895,8 +6895,8 @@
         <kinematic>0</kinematic>
       </link>
     </model>
-    <model name='my_mesh_clone_3'>
-      <pose>6.56133 0.626193 -0.371639 0 -0 0</pose>
+    <model name='WestElmIris_clone_3'>
+      <pose>-7.87828 -3.67553 -0.421608 0 -0 0</pose>
       <static>1</static>
       <link name='link'>
         <inertial>
@@ -6933,7 +6933,7 @@
         <visual name='visual'>
           <geometry>
             <mesh>
-              <uri>model://my_mesh/model.dae</uri>
+              <uri>model://WestElmIris/model.dae</uri>
             </mesh>
           </geometry>
         </visual>
@@ -6942,8 +6942,8 @@
         <kinematic>0</kinematic>
       </link>
     </model>
-    <model name='my_mesh_clone_4'>
-      <pose>-1.06872 4.87452 -0.371639 0 -0 0</pose>
+    <model name='WestElmIris_clone_4'>
+      <pose>-6.61784 -3.64617 -0.421608 0 -0 0</pose>
       <static>1</static>
       <link name='link'>
         <inertial>
@@ -6980,7 +6980,7 @@
         <visual name='visual'>
           <geometry>
             <mesh>
-              <uri>model://my_mesh/model.dae</uri>
+              <uri>model://WestElmIris/model.dae</uri>
             </mesh>
           </geometry>
         </visual>
