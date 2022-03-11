@@ -5,6 +5,8 @@
 
   <include file="$(find plantbot)/launch/move_base.launch"></include>
 
-  <include file="$(find turtlebot3_slam)/launch/turtlebot3_slam.launch"></include>
+  <include file="$(find plantbot)/launch/turtlebot3_slam.launch"></include>
+
+  <include file="$(find plantbot)/launch/darknet_ros.launch"></include>
 
 </launch>
