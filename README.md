@@ -88,3 +88,33 @@ The world files for Gazebo.
 The custom models in use for the Gazebo worlds.
 
 **Note: The current version use amcl in order to get localization data for testing the planners (TEB for local planner). Localization choice may change as project proceed.**
+
+
+# ROS Nodes
+
+## `plant_poses/coords_poller.py`
+
+Polling the registered goals and send to move_base.
+
+The next goal will be polled and applied from the cyclic queue when the current goal is in terminal state (informed by move_base).
+
+### Subscribed Topics
+
+#### `coord_poller/register_goal` 
+
+Parameter: `geometry_msgs/pose`
+
+Interface to register the pose into internal database
+
+#### `coord_poller/poll_one`
+
+Parameter: `std_msgs/Empty`
+
+Bootstrap the poller or force poller to poll for next goal even if the current goal is not being fulfilled. This will be useful for exploration layer to notify the end of process.
+
+
+### Parameter
+
+#### `~min_radius` default=`1`
+
+The minimum radius between any two goals.
