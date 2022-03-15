@@ -60,12 +60,12 @@ def callback(data):
             if abs(diff) > 50:
                 if diff > 0: # box is on right side of middle, move clockwise
                     move_cmd.angular.z = 0
-                    # move_cmd.angular.z = -0.0872665
-                    move_cmd.angular.z = -0.01
+                    move_cmd.angular.z = -0.0872665
+                    # move_cmd.angular.z = -0.01
                 elif diff < 0: # box is on left side of middle, move anticlockwise
                     move_cmd.angular.z = 0
-                    # move_cmd.angular.z = 0.0872665
-                    move_cmd.angular.z = 0.01
+                    move_cmd.angular.z = 0.0872665
+                    # move_cmd.angular.z = 0.01
                 else:
                     print("should not be here")
             else:
