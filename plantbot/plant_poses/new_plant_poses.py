@@ -34,10 +34,10 @@ def callback(data):
             # client.cancel_all_goals()
             if exploreStopped == False: # kill explore node
                 exploreStopped = True
-                client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
-                client.wait_for_server()
-                os.system("rosnode kill /explore")
-                client.cancel_all_goals()
+                #client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
+                #client.wait_for_server()
+                #os.system("rosnode kill /explore")
+                #client.cancel_all_goals()
             print("FOUND PLANT")
             img = rospy.wait_for_message('/camera/rgb/image_raw', Image, timeout=None)
             print(img.width)
@@ -49,12 +49,16 @@ def callback(data):
             move_cmd = Twist()
 
 
-            if box_mid < (img.width / 2):
+            # rotate / 31.1    =     box_centre / 960
+
+            if abs(diff) > 50:
+                if box_mid < (img.width / 2):
                 # if on left side
-                angle = (box_mid / (img.width / 2)) * math.radians(31.1)
-            else:
+                    angle = math.radians(31.1) - (box_mid / (img.width / 2)) * math.radians(31.1)
+                else:
                 # if on right side
-                angle = ((box_mid / (img.width / 2)) * math.radians(31.1)) - math.radians(31.1)
+                    box_mid -= 960
+                    angle = -(box_mid / (img.width / 2)) * math.radians(31.1)
 
             print("ANGLE", angle)
             move_cmd.angular.z = angle / 2
@@ -88,6 +92,7 @@ def callback(data):
             time.sleep(2)
             move_cmd.angular.z = 0
             cmd_vel.publish(move_cmd)
+            time.sleep(20)
 
 
             msg = rospy.wait_for_message('/odom', Odometry, timeout=None)

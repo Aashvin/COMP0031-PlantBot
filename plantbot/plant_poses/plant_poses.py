@@ -6,6 +6,7 @@ import rospkg
 import roslaunch
 import actionlib
 import os
+import tf
 
 from sensor_msgs.msg import Image
 from sensor_msgs.msg import LaserScan
@@ -24,45 +25,16 @@ import time
 def callback(data):
     global pub
     for box in data.bounding_boxes:
-        # time.sleep(10)
-        # print("stopping explore")
-        # client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
-        # client.wait_for_server()
-        # os.system("rosnode kill /explore")
-        # client.cancel_all_goals()
-        # print("counting to 10")
-        # time.sleep(10)
-        # print("time up")
-        # pub.publish("start")
-        # client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
-        # client.wait_for_server()
-        # os.system("rosnode kill /explore")
-        # client.cancel_all_goals()
-        # print("counting to 5")
-        # time.sleep(5)
-        # print("time up")
-        # os.system("roslaunch explore_lite explore.launch")
-        # print("explore node launched again")
-#        rospy.loginfo(
-#            "Xmin: {}, Xmax: {} Ymin: {}, Ymax: {}".format(
-#                box.xmin, box.xmax, box.ymin, box.ymax
-#            )
-#        )
-        # print(box.xmax, box.xmin)
-        # print(img.width)
 
         rospy.loginfo("{}, {}".format(box.id, box.Class))
         if box.Class == "pottedplant":
             global exploreStopped
-            # client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
-            # client.wait_for_server()
-            # client.cancel_all_goals()
-            if exploreStopped == False: # kill explore node
-                exploreStopped = True
-                client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
-                client.wait_for_server()
-                os.system("rosnode kill /explore")
-                client.cancel_all_goals()
+            # if exploreStopped == False: # kill explore node
+                # exploreStopped = True
+                # client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
+                # client.wait_for_server()
+                # os.system("rosnode kill /explore")
+                # client.cancel_all_goals()
             print("FOUND PLANT")
             img = rospy.wait_for_message('/camera/rgb/image_raw', Image, timeout=None)
 
@@ -88,6 +60,7 @@ def callback(data):
                 move_cmd.angular.z = 0
                 scan_data = rospy.wait_for_message('/scan', LaserScan, timeout=None)
                 scan_val = scan_data.ranges[0]
+                print("LIDAR: ", scan_val)
                 if scan_val > 1:
                     move_cmd.linear.x = 0.2
                 else:
@@ -97,17 +70,41 @@ def callback(data):
                     move_to_plant = False
                     move_cmd.linear.x = 0
 
+                    msg = rospy.wait_for_message('/odom', Odometry, timeout=None)
+                    robot_orientation = msg.pose.pose.orientation
+                    robot_position = msg.pose.pose.position
+
+                    robot_yaw = tf.transformations.euler_from_quaternion([robot_orientation.x, robot_orientation.y, robot_orientation.z, robot_orientation.w])[2]
+                    if 0 <= robot_yaw <= 0.5 * np.pi:
+                        plant_y = robot_position.y + scan_val * np.sin(robot_yaw)
+                        plant_x = robot_position.x + scan_val * np.cos(robot_yaw)
+                    elif 0.5 * np.pi < robot_yaw <= np.pi:
+                        plant_y = robot_position.y + scan_val * np.sin(np.pi - robot_yaw)
+                        plant_x = robot_position.x - scan_val * np.cos(np.pi - robot_yaw)
+                    elif -np.pi <= robot_yaw <= 0.5 * -np.pi:
+                        plant_y = robot_position.y - scan_val * np.sin(np.pi - abs(robot_yaw))
+                        plant_x = robot_position.x - scan_val * np.cos(np.pi - abs(robot_yaw))
+                    elif 0.5 * -np.pi < robot_yaw < 0:
+                        plant_y = robot_position.y - scan_val * np.sin(abs(robot_yaw))
+                        plant_x = robot_position.x + scan_val * np.cos(abs(robot_yaw))
+                    else:
+                        print("INCORRECT YAW - SHOULDN'T BE POSSIBLE")
+
+                    global plant_positions
+                    plant_positions.append((plant_x, plant_y))
+                    print(f"PLANT POS: {plant_x}, {plant_y}")
+
             cmd_vel.publish(move_cmd)
 
-            msg = rospy.wait_for_message('/odom', Odometry, timeout=None)
+            # msg = rospy.wait_for_message('/odom', Odometry, timeout=None)
 
             
-            plant_pose = {"x_pos": msg.pose.pose.position.x, "y_pos": msg.pose.pose.position.y, "z_pos": msg.pose.pose.position.z, 
-                            "x_rot": msg.pose.pose.orientation.x, "y_rot": msg.pose.pose.orientation.y, "z_rot": msg.pose.pose.orientation.z, "w_rot": msg.pose.pose.orientation.w}
-            global rospack
-            f = open(rospack.get_path('plantbot') + "/plant_poses/robot_poses.txt", "a")
-            f.write(json.dumps(plant_pose) + "\n")
-            f.close()
+            # plant_pose = {"x_pos": msg.pose.pose.position.x, "y_pos": msg.pose.pose.position.y, "z_pos": msg.pose.pose.position.z, 
+            #                 "x_rot": msg.pose.pose.orientation.x, "y_rot": msg.pose.pose.orientation.y, "z_rot": msg.pose.pose.orientation.z, "w_rot": msg.pose.pose.orientation.w}
+            # global rospack
+            # f = open(rospack.get_path('plantbot') + "/plant_poses/robot_poses.txt", "a")
+            # f.write(json.dumps(plant_pose) + "\n")
+            # f.close()
 
 def main():
     global exploreStopped 
@@ -119,6 +116,8 @@ def main():
     plant_reached = False
     global rospack
     rospack = rospkg.RosPack()
+    global plant_positions
+    plant_positions = []
     f = open(rospack.get_path('plantbot') + "/plant_poses/robot_poses.txt", "w")
     f.close()
 
