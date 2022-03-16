@@ -29,7 +29,9 @@
           args="-d $(find plantbot)/rviz/navigation.rviz"/>
   </group>
 
-  <node pkg="plantbot" name="coords_poller" type="coords_poller.py">
+  <!-- <node pkg="plantbot" name="coords_poller" type="coords_poller.py">
     <rosparam file="$(find plantbot)/param/coords_poller_params.yaml" command="load"/>
-  </node>
+  </node> -->
+
+  <include file="$(find plantbot)/launch/darknet_ros.launch"></include>
 </launch>
