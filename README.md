@@ -2,13 +2,15 @@
 
 
 ## Requirements
-Turtlebot3: https://wiki.ros.org/turtlebot3
-AMCL: http://wiki.ros.org/amcl
-TEB Local Planner: http://wiki.ros.org/teb_local_planner
-Explore Lite: http://wiki.ros.org/explore_lite
-YOLO: https://github.com/leggedrobotics/darknet_ros
-RVIZ
-Gazebo
+<ul>
+  <li>Turtlebot3: https://wiki.ros.org/turtlebot3 </li>
+  <li>AMCL: http://wiki.ros.org/amcl </li>
+  <li>TEB Local Planner: http://wiki.ros.org/teb_local_planner </li>
+  <li>Explore Lite: http://wiki.ros.org/explore_lite </li>
+  <li>YOLO: https://github.com/leggedrobotics/darknet_ros </li>
+  <li>RVIZ
+  <li>Gazebo
+</ul>
 
 
 ## Setup
@@ -29,13 +31,7 @@ $ rospack profile
 
 ## Launch Options
 
-### Launch the entire SLAM exploration procedure:
-
-```shell
-$ roslaunch plantbot plantbot_launch.launch
-```
-
-### Launch YOLO:
+### Source YOLO:
 
 Source the darknet (Make sure to install COCO weights) package setup file e.g.:
 
@@ -45,10 +41,10 @@ $ source darknet_ws/devel/setup.bash
 
 After this, export the plantbot package into ROS_PACKAGE_PATH as shown in the steup step.
 
-Run the darknet launch file:
+### Launch the entire SLAM exploration procedure + YOLO:
 
 ```shell
-$ roslaunch plantbot darknet_ros.launch
+$ roslaunch plantbot plantbot_launch.launch
 ```
 
 ## Repo Organization (In directory `plantbot`)
