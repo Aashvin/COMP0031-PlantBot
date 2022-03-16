@@ -22,7 +22,18 @@ import time
 
 
 def callback(data):
+    global pub
     for box in data.bounding_boxes:
+        # time.sleep(10)
+        # print("stopping explore")
+        # client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
+        # client.wait_for_server()
+        # os.system("rosnode kill /explore")
+        # client.cancel_all_goals()
+        # print("counting to 10")
+        # time.sleep(10)
+        # print("time up")
+        # pub.publish("start")
         # client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
         # client.wait_for_server()
         # os.system("rosnode kill /explore")
@@ -43,6 +54,9 @@ def callback(data):
         rospy.loginfo("{}, {}".format(box.id, box.Class))
         if box.Class == "pottedplant":
             global exploreStopped
+            # client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
+            # client.wait_for_server()
+            # client.cancel_all_goals()
             if exploreStopped == False: # kill explore node
                 exploreStopped = True
                 client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
@@ -78,47 +92,30 @@ def callback(data):
                     move_cmd.linear.x = 0.2
                 else:
                     print("in front of plant...?")
+                    global plant_reached
+                    plant_reached = True
                     move_cmd.linear.x = 0
 
             cmd_vel.publish(move_cmd)
 
-
-            # rospack = rospkg.RosPack()
             msg = rospy.wait_for_message('/odom', Odometry, timeout=None)
-            # scan_data = rospy.wait_for_message('/scan', LaserScan, timeout=None)
-            # scan_val = scan_data.ranges[0]
-            # angle = np.arcsin(msg.pose.pose.orientation.w) * 2
-            # print(np.degrees(angle))
-            # img = rospy.wait_for_message('/camera/rgb/image_raw', Image, timeout=None)
-            # box_mid = (box.xmax + box.xmin) / 2
-            # range_index = int((box_mid / img.width) * 360)
-            # print(f"range index: {range_index}")
-            # print(f"value: {scan_data.ranges[range_index]}")
 
-            # print(scan_data)
-            # print(len(scan_data.ranges))
-            # print(msg.pose.pose)
             
             plant_pose = {"x_pos": msg.pose.pose.position.x, "y_pos": msg.pose.pose.position.y, "z_pos": msg.pose.pose.position.z, 
                             "x_rot": msg.pose.pose.orientation.x, "y_rot": msg.pose.pose.orientation.y, "z_rot": msg.pose.pose.orientation.z, "w_rot": msg.pose.pose.orientation.w}
             global rospack
             f = open(rospack.get_path('plantbot') + "/plant_poses/robot_poses.txt", "a")
             f.write(json.dumps(plant_pose) + "\n")
-            # f.write(str(msg.pose.pose.position.x) + "\n")
-            # f.write(str(msg.pose.pose.position.y) + "\n")
-            # f.write(str(msg.pose.pose.position.z) + "\n")
-            # f.write(str(msg.pose.pose.orientation.x) + "\n")
-            # f.write(str(msg.pose.pose.orientation.y) + "\n")
-            # f.write(str(msg.pose.pose.orientation.z) + "\n")
-            # f.write(str(msg.pose.pose.orientation.w) + "\n\n")
             f.close()
 
 def main():
-    # f = open("robot_poses.txt", "w")
     global exploreStopped 
     exploreStopped = False
+    global pub
     global move_to_plant
     move_to_plant = False
+    global plant_reached
+    plant_reached = False
     global rospack
     rospack = rospkg.RosPack()
     f = open(rospack.get_path('plantbot') + "/plant_poses/robot_poses.txt", "w")
@@ -136,9 +133,15 @@ def main():
                 print("in front of plant...?")
                 move_cmd.linear.x = 0
                 move_to_plant = False
+                plant_reached = True
             cmd_vel.publish(move_cmd)
+        if plant_reached == True and exploreStopped == True:
+            pub.publish("start")
+            plant_reached = False
+            exploreStopped = False
         rospy.init_node('listener', anonymous=True)
         rospy.Subscriber('/darknet_ros/bounding_boxes/', BoundingBoxes , callback)
+        pub = rospy.Publisher('start_explore', String, queue_size=10)
         rospy.spin()
 
 
