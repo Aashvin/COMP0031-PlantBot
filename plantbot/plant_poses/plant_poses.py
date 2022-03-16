@@ -94,6 +94,7 @@ def callback(data):
                     print("in front of plant...?")
                     global plant_reached
                     plant_reached = True
+                    move_to_plant = False
                     move_cmd.linear.x = 0
 
             cmd_vel.publish(move_cmd)
@@ -122,6 +123,9 @@ def main():
     f.close()
 
     while not rospy.is_shutdown():
+        rospy.init_node('listener', anonymous=True)
+        rospy.Subscriber('/darknet_ros/bounding_boxes/', BoundingBoxes , callback)
+        pub = rospy.Publisher('start_explore', String, queue_size=10)
         if move_to_plant == True:
             cmd_vel = rospy.Publisher('cmd_vel', Twist, queue_size=10)
             move_cmd = Twist()
@@ -139,9 +143,6 @@ def main():
             pub.publish("start")
             plant_reached = False
             exploreStopped = False
-        rospy.init_node('listener', anonymous=True)
-        rospy.Subscriber('/darknet_ros/bounding_boxes/', BoundingBoxes , callback)
-        pub = rospy.Publisher('start_explore', String, queue_size=10)
         rospy.spin()
 
 
