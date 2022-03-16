@@ -94,7 +94,6 @@ def callback(data):
                     print("in front of plant...?")
                     global plant_reached
                     plant_reached = True
-                    global move_to_plant
                     move_to_plant = False
                     move_cmd.linear.x = 0
 
