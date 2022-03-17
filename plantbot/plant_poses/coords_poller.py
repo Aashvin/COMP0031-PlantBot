@@ -4,6 +4,7 @@ import json
 import std_msgs.msg
 import kdtree
 import rospy
+import rospkg
 from geometry_msgs.msg import Pose, PoseStamped, Point, Quaternion
 from actionlib_msgs.msg import GoalStatus
 from actionlib_msgs.msg import GoalStatusArray
@@ -83,7 +84,8 @@ class CoordinatePollerNode:
         if len(data.status_list) != 0 and data.status_list[0].text == '' and not self.do_polling:
             self.explore_done.unregister()
             print("MAP SAVED")
-            os.system('rosrun map_server map_saver -f $(find plantbot)/maps/map')
+            rospack = rospkg.RosPack()
+            os.system('rosrun map_server map_saver -f ' + str(rospack.get_path('plantbot')) + '/maps/mymap')
             self.__save_to_json()
             self.do_polling = True
             self.coord_poll_one_callback(None)
