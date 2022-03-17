@@ -6,6 +6,7 @@ import kdtree
 import rospy
 from geometry_msgs.msg import Pose, PoseStamped, Point, Quaternion
 from actionlib_msgs.msg import GoalStatus
+from actionlib_msgs.msg import GoalStatusArray
 from move_base_msgs.msg import MoveBaseActionResult
 
 class CoordinatePollerNode:
@@ -39,16 +40,16 @@ class CoordinatePollerNode:
 
     def coord_poll_next_callback(self, data):
         state = data.status.status
-        rospy.loginfo("Result %s"%(state))
+        # rospy.loginfo("Result %s"%(state))
         if state not in self.goal_terminal_state:
             return
-        if state != GoalStatus.SUCCEEDED:
-            rospy.logwarn("Goal terminated unexpected!")
+        # if state != GoalStatus.SUCCEEDED:
+            # rospy.logwarn("Goal terminated unexpected!")
         self.coord_poll_one_callback(None)
 
     def coord_poll_one(self):
         if len(self.poses_q) == 0:
-            rospy.logerr("No pose is being registered!")
+            # rospy.logerr("No pose is being registered!")
             return None
         coord = self.poses_q[self.pose_qi]
         self.pose_qi = (self.pose_qi + 1) % len(self.poses_q)
@@ -65,7 +66,8 @@ class CoordinatePollerNode:
         self.polled = rospy.Publisher("/move_base_simple/goal", PoseStamped, queue_size=5)
         self.sub = rospy.Subscriber("coord_poller/register_goal", Pose, callback=self.coord_posed_callback, queue_size=20)
         self.done = rospy.Subscriber("/move_base/result", MoveBaseActionResult, callback=self.coord_poll_next_callback)
-        rospy.Subscriber("coord_poller/save", std_msgs.msg.Empty, callback=self.__save_file, queue_size=1)
+        # rospy.Subscriber("coord_poller/save", std_msgs.msg.Empty, callback=self.__save_file, queue_size=1)
+        rospy.Subscriber("/move_base/status", GoalStatusArray, callback=self.__save_file)
         
         if (self.do_polling):
             self.coord_poll_one_callback(None)
@@ -76,8 +78,11 @@ class CoordinatePollerNode:
             pass
         self.__save_to_json()
 
-    def __save_file(self, _ = None):
-        self.__save_to_json()
+    def __save_file(self, data):
+        if len(data.status_list) != 0 and data.status_list[0].text == '':
+            print("here")
+            os.system('rosrun map_server map_saver --occ 90 --free 10 -f $(find plantbot)/maps/map')
+            self.__save_to_json()
 
     def __coord_convert(self, pose):
         return (pose.position.x, pose.position.y, pose.position.z)
