@@ -6295,7 +6295,7 @@
     </scene>
     <gui fullscreen='0'>
       <camera name='user_camera'>
-        <pose>-4.21011 1.46121 13.6312 0 1.4698 0.007091</pose>
+        <pose>-4.52444 -0.296417 16.0515 0 1.46051 -0.000131</pose>
         <view_controller>orbit</view_controller>
         <projection_type>perspective</projection_type>
       </camera>
@@ -6312,10 +6312,10 @@
       <heading_deg>0</heading_deg>
     </spherical_coordinates>
     <state world_name='default'>
-      <sim_time>875 833000000</sim_time>
-      <real_time>223 571680300</real_time>
-      <wall_time>1647517698 52257100</wall_time>
-      <iterations>222400</iterations>
+      <sim_time>1104 6000000</sim_time>
+      <real_time>232 701836600</real_time>
+      <wall_time>1647537787 52715300</wall_time>
+      <iterations>228173</iterations>
       <model name='WestElmIris'>
         <pose>-5.59062 0.027588 -0.441176 0 -0 0</pose>
         <scale>1 1 1</scale>
@@ -6371,6 +6371,16 @@
         <scale>1 1 1</scale>
         <link name='link'>
           <pose>4.47129 -5.13265 -0.460249 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='drc_practice_base'>
+        <pose>0.655169 0.068129 0.0127 1.57563 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name='platform'>
+          <pose>0.655169 0.068129 0.0127 1.57563 -0 0</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 0 0 -0 0</acceleration>
           <wrench>0 0 0 0 -0 0</wrench>
@@ -6519,7 +6529,7 @@
           <pose>0.478189 -0.352762 0 0 0 -3.14159</pose>
           <scale>1 1 1</scale>
           <link name='link'>
-            <pose>0.478189 -0.352762 -9e-06 -3e-06 -6e-06 -3.14159</pose>
+            <pose>0.478189 -0.352762 0 1e-06 -3e-06 -3.14159</pose>
             <velocity>0 0 0 0 -0 0</velocity>
             <acceleration>0 0 -9.8 0 -0 0</acceleration>
             <wrench>0 0 -9.8 0 -0 0</wrench>
@@ -6609,27 +6619,27 @@
           <pose>1.47819 2.1354 0 0 -0 0</pose>
           <scale>1 1 1</scale>
           <link name='link'>
-            <pose>1.47825 2.13537 -3e-06 4e-06 1e-05 -0.000265</pose>
+            <pose>1.47827 2.13539 -2e-06 -1.1e-05 9e-06 -0.000332</pose>
             <velocity>0 0 0 0 -0 0</velocity>
-            <acceleration>-3.72393 2.1318 0.920217 -2.55437 0.654632 -2.2895</acceleration>
-            <wrench>-17.9894 10.2982 4.44534 0 -0 0</wrench>
+            <acceleration>6.21767 -0.884462 5.02928 -0.662705 -1.163 3.06809</acceleration>
+            <wrench>30.0361 -4.27262 24.2953 0 -0 0</wrench>
           </link>
         </model>
         <model name='first_2015_trash_can_0'>
           <pose>-5.09881 5.11786 0 0 -0 0</pose>
           <scale>1 1 1</scale>
           <link name='link'>
-            <pose>-5.09874 5.11784 -2e-06 7e-06 1e-05 -0.000266</pose>
+            <pose>-5.09872 5.11783 -3e-06 1e-06 1e-05 -0.000323</pose>
             <velocity>0 0 0 0 -0 0</velocity>
-            <acceleration>0.258349 -0.034779 1.80259 0.094495 0.701506 -8.7e-05</acceleration>
-            <wrench>1.24802 -0.168008 8.70786 0 -0 0</wrench>
+            <acceleration>-1.43512 0.662101 -5.9905 1.34386 0.755022 3.14157</acceleration>
+            <wrench>-6.93271 3.19845 -28.9387 0 -0 0</wrench>
           </link>
         </model>
         <model name='table'>
           <pose>-3.06255 2.64723 0 0 -0 0</pose>
           <scale>1 1 1</scale>
           <link name='link'>
-            <pose>-3.06255 2.64723 -9e-06 0 -1e-06 0</pose>
+            <pose>-3.06255 2.64723 -0 0 -0 0</pose>
             <velocity>0 0 0 0 -0 0</velocity>
             <acceleration>0 0 -9.8 0 -0 0</acceleration>
             <wrench>0 0 -9.8 0 -0 0</wrench>
@@ -7171,6 +7181,45 @@
       <static>1</static>
       <allow_auto_disable>1</allow_auto_disable>
       <pose>4.4684 -5.13265 -0.441176 0 -0 0</pose>
+    </model>
+    <model name='drc_practice_base'>
+      <static>1</static>
+      <pose>-1.81831 -2.0429 0.0127 0 -0 0</pose>
+      <link name='platform'>
+        <collision name='collision'>
+          <geometry>
+            <box>
+              <size>1.2192 2.4384 0.0254</size>
+            </box>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>100</mu>
+                <mu2>50</mu2>
+              </ode>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name='visual'>
+          <geometry>
+            <mesh>
+              <uri>model://drc_practice_base_4x8/meshes/4x8ftbase.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
     </model>
   </world>
 </sdf>
