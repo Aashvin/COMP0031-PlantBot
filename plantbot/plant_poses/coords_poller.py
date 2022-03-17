@@ -45,7 +45,8 @@ class CoordinatePollerNode:
             return
         # if state != GoalStatus.SUCCEEDED:
             # rospy.logwarn("Goal terminated unexpected!")
-        self.coord_poll_one_callback(None)
+        if self.do_polling:
+            self.coord_poll_one_callback(None)
 
     def coord_poll_one(self):
         if len(self.poses_q) == 0:
@@ -67,7 +68,7 @@ class CoordinatePollerNode:
         self.sub = rospy.Subscriber("coord_poller/register_goal", Pose, callback=self.coord_posed_callback, queue_size=20)
         self.done = rospy.Subscriber("/move_base/result", MoveBaseActionResult, callback=self.coord_poll_next_callback)
         # rospy.Subscriber("coord_poller/save", std_msgs.msg.Empty, callback=self.__save_file, queue_size=1)
-        self.explore_done = rospy.Subscriber("/move_base/status", GoalStatusArray, callback=self.__save_file)
+        # self.explore_done = rospy.Subscriber("/move_base/status", GoalStatusArray, callback=self.__save_file)
         
         if (self.do_polling):
             self.coord_poll_one_callback(None)
@@ -99,7 +100,7 @@ class CoordinatePollerNode:
             json.dump([self.__pose2json(pose) for pose in self.poses_q], f)
     
     def __read_from_json(self):
-        if not os.path.exists("poses_save.json"):
+        if not os.path.exists("%s/poses_save.json"%(self.script_path)):
             return
         with open("%s/poses_save.json"%(self.script_path), "r") as f:
             poses = json.load(f)
