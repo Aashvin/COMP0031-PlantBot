@@ -36,7 +36,7 @@ class DistEstimate:
             phi = theta if theta >= 0 else scan.angle_max - abs(theta)
             idx = math.ceil(phi / scan.angle_increment)
             d = scan.ranges[idx]
-            prev_measure = 0
+            prev_measure = d
             delta = 0
             total = 2 * self.samples_half_interval + 1
             for i in range(-self.samples_half_interval, self.samples_half_interval):
@@ -131,6 +131,6 @@ if __name__ == "__main__":
         cam_hres=rospy.get_param("~img_width", 3280),
         samples_half_interval=rospy.get_param("~half_ray_samples", 1),
         min_measure=rospy.get_param("~min_distance", 0.2),
-        coord_stable_threshold=rospy.get_param("~converge_check", 15),
+        coord_stable_threshold=rospy.get_param("~converge_check", 10),
         max_delta=rospy.get_param("~max_scan_delta", 0.2),
     ).start()
