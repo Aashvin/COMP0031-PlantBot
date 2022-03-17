@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import os
 import json
-import std_msgs
+import std_msgs.msg
 import kdtree
 import rospy
 from geometry_msgs.msg import Pose, PoseStamped, Point, Quaternion
@@ -59,17 +59,24 @@ class CoordinatePollerNode:
         rospy.init_node("coord_poller", anonymous=False)
         
         self.min_radius = rospy.get_param("~min_radius", 1)
+        self.do_polling = rospy.get_param("~do_polling", False)
         self.__read_from_json()
         
         self.polled = rospy.Publisher("/move_base_simple/goal", PoseStamped, queue_size=5)
         self.sub = rospy.Subscriber("coord_poller/register_goal", Pose, callback=self.coord_posed_callback, queue_size=20)
         self.done = rospy.Subscriber("/move_base/result", MoveBaseActionResult, callback=self.coord_poll_next_callback)
-        self.poll_one = rospy.Subscriber("coord_poller/poll_one", std_msgs.msg.Empty, callback=self.coord_poll_one_callback)
+        rospy.Subscriber("coord_poller/save", std_msgs.msg.Empty, callback=self.__save_file, queue_size=1)
+        
+        if (self.do_polling):
+            self.coord_poll_one_callback(None)
 
         try:
             rospy.spin()
         except rospy.ROSInterruptException:
             pass
+        self.__save_to_json()
+
+    def __save_file(self, _ = None):
         self.__save_to_json()
 
     def __coord_convert(self, pose):

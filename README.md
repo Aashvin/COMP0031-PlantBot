@@ -105,13 +105,14 @@ Namespace: `coord_poller/`
 |    topic   |  parameter |     description    |
 | --- | --- | --- |
 | `register_goal` | `geometry_msgs/pose` | Interface to register the pose into internal database |
-| `poll_one` | `std_msgs/Empty` | Bootstrap the poller or force poller to poll for next goal even if the current goal is not being fulfilled. This will be useful for exploration layer to notify the end of process.
+| `save` | `std_msgs/Empty` | Save the poses into json file. |
 
 ### Parameter
 
 | name  | description | default |
 | -- | -- | -- | 
 | `~min_radius` | The minimum radius between any two goals. | `1` |
+| `~do_polling` | Whether the poller should start polling when it launched | `false` |
 
 ## `plant_poses/pose_estimate.py`
 
