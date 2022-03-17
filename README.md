@@ -100,21 +100,40 @@ The next goal will be polled and applied from the cyclic queue when the current 
 
 ### Subscribed Topics
 
-#### `coord_poller/register_goal` 
+Namespace: `coord_poller/`
 
-Parameter: `geometry_msgs/pose`
-
-Interface to register the pose into internal database
-
-#### `coord_poller/poll_one`
-
-Parameter: `std_msgs/Empty`
-
-Bootstrap the poller or force poller to poll for next goal even if the current goal is not being fulfilled. This will be useful for exploration layer to notify the end of process.
-
+|    topic   |  parameter |     description    |
+| --- | --- | --- |
+| `register_goal` | `geometry_msgs/pose` | Interface to register the pose into internal database |
+| `poll_one` | `std_msgs/Empty` | Bootstrap the poller or force poller to poll for next goal even if the current goal is not being fulfilled. This will be useful for exploration layer to notify the end of process.
 
 ### Parameter
 
-#### `~min_radius` default=`1`
+| name  | description | default |
+| -- | -- | -- | 
+| `~min_radius` | The minimum radius between any two goals. | `1` |
 
-The minimum radius between any two goals.
+## `plant_poses/pose_estimate.py`
+
+Estimate the world coordinates of plants from YOLO bounding box's UV coordinates
+
+### Subscribed Topics
+
+Namespace: `plant_pose_estimate/`
+
+|    topic   |  parameter |     description    |
+| --- | --- | --- |
+|`pose` | `geometry_msgs/pose` | The estimated plant pose |
+|`up`| `std_msgs/empty` | Bring up the node, used after `plant_pose_estimate/down`|
+|`down`| `std_msgs/empty` | Pause the node |
+
+### Parameters
+
+| name | description | default |
+|--|--|--|
+| `~horizontal_fov` | Camera's horizontal field of view | `62.2` |
+| `~img_width` | Horizontal width in pixel of captured image | `3280` |
+| `~half_ray_samples` | Number of additional laser scanning ray samples in the half interval used for estimation | `1` |
+| `~min_distance` | Minimum proximity distance to the estimated object (in meters) | `0.2` |
+| `~converge_check` | Number of iterations that used to converge the estimation | `15` |
+| `~max_scan_delta` | Maximum tolerance (in meters) on the difference between sampled scan ray, no effect if `~half_ray_samples=0` | `0.2` |
