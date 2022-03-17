@@ -118,7 +118,7 @@ class DistEstimate:
 
     
     def start(self):
-        self.plant_coord = rospy.Publisher("plant_pose_estimate/pose", Pose, queue_size=5)
+        self.plant_coord = rospy.Publisher("/coord_poller/register_goal", Pose, queue_size=5)
         rospy.Subscriber("plant_pose_estimate/down", Empty, self.__pull_down, queue_size=2)
         rospy.Subscriber("plant_pose_estimate/up", Empty, self.__pull_up, queue_size=2)
         self.__pull_up()

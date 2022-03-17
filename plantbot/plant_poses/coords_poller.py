@@ -67,7 +67,7 @@ class CoordinatePollerNode:
         self.sub = rospy.Subscriber("coord_poller/register_goal", Pose, callback=self.coord_posed_callback, queue_size=20)
         self.done = rospy.Subscriber("/move_base/result", MoveBaseActionResult, callback=self.coord_poll_next_callback)
         # rospy.Subscriber("coord_poller/save", std_msgs.msg.Empty, callback=self.__save_file, queue_size=1)
-        rospy.Subscriber("/move_base/status", GoalStatusArray, callback=self.__save_file)
+        self.explore_done = rospy.Subscriber("/move_base/status", GoalStatusArray, callback=self.__save_file)
         
         if (self.do_polling):
             self.coord_poll_one_callback(None)
@@ -79,10 +79,13 @@ class CoordinatePollerNode:
         self.__save_to_json()
 
     def __save_file(self, data):
-        if len(data.status_list) != 0 and data.status_list[0].text == '':
-            print("here")
-            os.system('rosrun map_server map_saver --occ 90 --free 10 -f $(find plantbot)/maps/map')
+        if len(data.status_list) != 0 and data.status_list[0].text == '' and not self.do_polling:
+            self.explore_done.unregister()
+            print("MAP SAVED")
+            os.system('rosrun map_server map_saver -f $(find plantbot)/maps/map')
             self.__save_to_json()
+            self.do_polling = True
+            self.coord_poll_one_callback(None)
 
     def __coord_convert(self, pose):
         return (pose.position.x, pose.position.y, pose.position.z)
