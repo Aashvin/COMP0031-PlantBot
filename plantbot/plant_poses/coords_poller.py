@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 import os
 import json
+from time import sleep
 import std_msgs.msg
 import kdtree
 import rospy
 import rospkg
 from geometry_msgs.msg import Pose, PoseStamped, Point, Quaternion
-from actionlib_msgs.msg import GoalStatus
+from actionlib_msgs.msg import GoalStatus, GoalStatusArray
 from move_base_msgs.msg import MoveBaseActionResult
 
 class CoordinatePollerNode:
@@ -40,15 +41,13 @@ class CoordinatePollerNode:
 
     def coord_poll_next_callback(self, data):
         state = data.status.status
-        # print("here")
         self.__save_file(data.status.text)
-        # rospy.loginfo("Result %s"%(state))
-        if state not in self.goal_terminal_state:
+        if state not in self.goal_terminal_state or not self.do_polling:
             return
-        # if state != GoalStatus.SUCCEEDED:
-            # rospy.logwarn("Goal terminated unexpected!")
-        if self.do_polling:
-            self.coord_poll_one_callback(None)
+        if state != GoalStatus.SUCCEEDED:
+            rospy.logwarn("Goal terminated unexpected!")
+            return
+        self.coord_poll_one_callback(None)
 
     def coord_poll_one(self):
         if len(self.poses_q) == 0:
@@ -70,6 +69,9 @@ class CoordinatePollerNode:
         self.sub = rospy.Subscriber("coord_poller/register_goal", Pose, callback=self.coord_posed_callback, queue_size=20)
         self.done = rospy.Subscriber("/move_base/result", MoveBaseActionResult, callback=self.coord_poll_next_callback)
         
+        # wait for move_base ready before polling coords
+        _ = rospy.wait_for_message("/move_base/status", GoalStatusArray, timeout=None)
+
         if (self.do_polling):
             self.coord_poll_one_callback(None)
 
