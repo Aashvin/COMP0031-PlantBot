@@ -1,0 +1,5 @@
+<launch>
+    <node pkg="plantbot" name="pose_estimate" type="pose_estimate.py">
+        <rosparam file="$(find plantbot)/param/pose_estimate_params.yaml" command="load"/>
+    </node>
+</launch>

@@ -61,6 +61,7 @@ $ roslaunch plantbot darknet_ros.launch
 + **turtlebot3_house_pink**: launch the pink cylinder scenario in gazebo
 + **plantbot_launch**: launches (plantbot) turtlebot_house3_pink, (explore_lite) explore_lite, (plantbot) move_base, (turtlebot3_slam) turtlebot3_slam
 + **darknet_ros**: YOLO for object classification
++ **pose_estimate**: Plant pose estimation node, must have yolo & simulation running before launching it.
 
 
 ### `maps`

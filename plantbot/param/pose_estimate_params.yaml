@@ -1,0 +1,6 @@
+# lower that if yolo is running slow
+converge_check: 20
+max_scan_delta: 0.1
+
+# recommend: >=1
+half_ray_samples: 2
