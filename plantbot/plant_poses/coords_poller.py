@@ -9,6 +9,7 @@ import rospkg
 from geometry_msgs.msg import Pose, PoseStamped, Point, Quaternion
 from actionlib_msgs.msg import GoalStatus, GoalStatusArray
 from move_base_msgs.msg import MoveBaseActionResult
+from visualization_msgs.msg import Marker
 
 class CoordinatePollerNode:
     def __init__(self, min_radius = 1):
@@ -38,6 +39,7 @@ class CoordinatePollerNode:
             rospy.loginfo("Accept new pose (%.2f, %.2f, %.2f)"%coord)
             self.poses.add(coord)
             self.poses_q.append(data)
+            self.__add_marker(data)
 
     def coord_poll_next_callback(self, data):
         state = data.status.status
@@ -57,6 +59,25 @@ class CoordinatePollerNode:
         self.pose_qi = (self.pose_qi + 1) % len(self.poses_q)
         self.current_pose = coord
         return coord
+
+    def __add_marker(self, pose):
+        marker = Marker()
+        marker.header.frame_id = "map"
+        marker.header.stamp = rospy.Time.now()
+        marker.ns = "plant_pose"
+        marker.id = len(self.poses_q)
+        marker.type = Marker.ARROW
+        marker.action = Marker.ADD
+        marker.pose = pose
+        marker.color.r = 0.8
+        marker.color.g = 1
+        marker.color.b = 0
+        marker.color.a = 1
+        marker.scale.x = 1
+        marker.scale.y = 0.1
+        marker.scale.z = 0.1
+        marker.lifetime = rospy.Duration()
+        self.marker.publish(marker)
     
     def start(self):
         rospy.init_node("coord_poller", anonymous=False)
@@ -68,7 +89,8 @@ class CoordinatePollerNode:
         self.polled = rospy.Publisher("/move_base_simple/goal", PoseStamped, queue_size=5)
         self.sub = rospy.Subscriber("coord_poller/register_goal", Pose, callback=self.coord_posed_callback, queue_size=20)
         self.done = rospy.Subscriber("/move_base/result", MoveBaseActionResult, callback=self.coord_poll_next_callback)
-        
+        self.marker = rospy.Publisher("visualization_marker", Marker, queue_size=1)
+
         # wait for move_base ready before polling coords
         _ = rospy.wait_for_message("/move_base/status", GoalStatusArray, timeout=None)
 
