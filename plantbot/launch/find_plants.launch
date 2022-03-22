@@ -1,0 +1,7 @@
+<launch>
+
+    <include file="$(find plantbot)/launch/plantbot_launch.launch"></include>
+
+    <include file="$(find plantbot)/launch/pose_estimate.launch"></include>
+
+</launch>

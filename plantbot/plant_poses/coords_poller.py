@@ -49,6 +49,9 @@ class CoordinatePollerNode:
         if state != GoalStatus.SUCCEEDED:
             rospy.logwarn("Goal terminated unexpected!")
             return
+        
+        os.system('rosrun plantbot spawn_water.py')
+
         self.coord_poll_one_callback(None)
 
     def coord_poll_one(self):
@@ -84,6 +87,9 @@ class CoordinatePollerNode:
         
         self.min_radius = rospy.get_param("~min_radius", 1)
         self.do_polling = rospy.get_param("~do_polling", False)
+        if self.do_polling:
+            self.marker = rospy.Publisher("visualization_marker", Marker, queue_size=1)
+
         self.__read_from_json()
         
         self.polled = rospy.Publisher("/move_base_simple/goal", PoseStamped, queue_size=5)
@@ -101,7 +107,7 @@ class CoordinatePollerNode:
             rospy.spin()
         except rospy.ROSInterruptException:
             pass
-        self.__save_to_json()
+        # self.__save_to_json()
 
     def __save_file(self, text):
         if text == '' and not self.do_polling:
@@ -109,7 +115,7 @@ class CoordinatePollerNode:
             rospack = rospkg.RosPack()
             cwd = os.getcwd()
             os.chdir(str(rospack.get_path('plantbot')) + '/maps')
-            os.system('rosrun map_server map_saver -f mymap2')
+            os.system('rosrun map_server map_saver -f mymap')
             os.chdir(cwd)
             self.__save_to_json()
             self.do_polling = True

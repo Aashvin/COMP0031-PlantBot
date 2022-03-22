@@ -2,8 +2,8 @@
     <node pkg="plantbot" name="pose_estimate" type="pose_estimate.py" output="screen">
         <rosparam file="$(find plantbot)/param/pose_estimate_params.yaml" command="load"/>
     </node>
-    <!-- <node pkg="plantbot" type="coords_poller.py" name="coords_poller" output="screen">
+    <node pkg="plantbot" type="coords_poller.py" name="coords_poller" output="screen">
         <param name="do_polling" value="false" />
         <param name="min_radius" value="0.8" />
-    </node> -->
+    </node>
 </launch>
