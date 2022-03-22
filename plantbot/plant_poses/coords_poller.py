@@ -107,7 +107,10 @@ class CoordinatePollerNode:
         if text == '' and not self.do_polling:
             print("MAP SAVED")
             rospack = rospkg.RosPack()
-            os.system('rosrun map_server map_saver -f ' + str(rospack.get_path('plantbot')) + '/maps/mymap')
+            cwd = os.getcwd()
+            os.chdir(str(rospack.get_path('plantbot')) + '/maps')
+            os.system('rosrun map_server map_saver -f mymap2')
+            os.chdir(cwd)
             self.__save_to_json()
             self.do_polling = True
             self.coord_poll_one_callback(None)

@@ -1,4 +1,4 @@
-image: /home/lxsky/ucl-cs/ros-project/group/COMP0031_PlantBot/plantbot/maps/mymap.pgm
+image: mymap.pgm
 resolution: 0.050000
 origin: [-10.000000, -10.000000, 0.000000]
 negate: 0
