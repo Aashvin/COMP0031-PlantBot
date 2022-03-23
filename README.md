@@ -7,7 +7,8 @@
   <li>AMCL: http://wiki.ros.org/amcl </li>
   <li>TEB Local Planner: http://wiki.ros.org/teb_local_planner </li>
   <li>Explore Lite: http://wiki.ros.org/explore_lite </li>
-  <li>YOLO: https://github.com/leggedrobotics/darknet_ros </li>
+  <li>YOLOv2 and YOLOv3: https://github.com/leggedrobotics/darknet_ros </li>
+  <li>YOLOv4: https://github.com/t1mkhuan9/yolov4-ros-noetic </li>
   <li>RVIZ
   <li>Gazebo
 </ul>
@@ -33,11 +34,20 @@ $ rospack profile
 
 ### Source YOLO:
 
+#### YOLOv4
+
+``` shell
+$ source yolov4-ws/devel/setup.bash
+```
+
+#### YOLOv2 and YOLOv3
+
 Source the darknet (Make sure to install COCO weights) package setup file e.g.:
 
 ```shell
 $ source darknet_ws/devel/setup.bash
 ```
+and change `plantbot/launch/darknet_ros.launch` line 14 to the corresponding yaml file.
 
 After this, export the plantbot package into ROS_PACKAGE_PATH as shown in the steup step.
 
