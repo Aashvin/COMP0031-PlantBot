@@ -1,3 +1,4 @@
+<!-- World adapted from https://emanual.robotis.com/docs/en/platform/turtlebot3/simulation/ -->
 <sdf version='1.7'>
   <world name='default'>
     <light name='sun' type='directional'>
