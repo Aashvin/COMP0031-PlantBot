@@ -7,12 +7,10 @@
   <li>AMCL: http://wiki.ros.org/amcl </li>
   <li>TEB Local Planner: http://wiki.ros.org/teb_local_planner </li>
   <li>Explore Lite: http://wiki.ros.org/explore_lite </li>
-  <li>YOLO: https://github.com/leggedrobotics/darknet_ros </li>
+  <li>YOLO: https://github.com/t1mkhuan9/yolov4-ros-noetic </li>
   <li>RVIZ
   <li>Gazebo
 </ul>
-
-Note when installing YOLO, make sure the COCO weights are installed.
 
 ## Setup
 
@@ -32,13 +30,23 @@ $ rospack profile
 
 ## Mapping and Finding Plants Phase
 
+### Adjust the pretrained weights used by YOLO:
+
+Change the `default` parameter on line 14 of `plantbot/launch/darknet_ros.launch` line 14 to one of the following YAML files:
+<ul>
+  <li> $(find darknet_ros)/config/yolov2.yaml </li>
+  <li> $(find darknet_ros)/config/yolov2-tiny.yaml </li>
+  <li> $(find darknet_ros)/config/yolov3.yaml </li>
+  <li> $(find darknet_ros)/config/yolov4.yaml </li>
+</ul>
+
 ### Source YOLO:
 
 ```shell
-$ source <your darknet_ws>/devel/setup.bash
+$ source <your yolo_ws>/devel/setup.bash
 ```
 
-### Export Plantbot to your ROS package path:
+### Export PlantBot to your ROS package path:
 
 ```shell
 $ cd COMP0031-PlantBot
@@ -59,7 +67,7 @@ $ roslaunch plantbot find_plants.launch
 
 ## Watering Plants Phase
 
-### Export Plantbot to your ROS package path:
+### Export PlantBot to your ROS package path:
 
 ```shell
 $ cd COMP0031-PlantBot
