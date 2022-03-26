@@ -1,0 +1,7 @@
+# lower that if yolo is running slow
+converge_check: 10
+max_scan_delta: 0.08
+clearance_radius: 1.5
+# recommend: >=1
+half_ray_samples: 1
+min_distance: 1.

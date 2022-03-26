@@ -1,0 +1,25 @@
+<launch>
+  <include file="$(find plantbot)/launch/turtlebot3_house_pink.launch"></include>
+
+  <arg name="map_file" value="$(find plantbot)/maps/mymap.yaml"></arg>
+  <node pkg="map_server" type="map_server" name="map_server" args="$(arg map_file)" respawn="true"></node>
+
+  <include file="$(find plantbot)/launch/move_base.launch"></include>
+  
+  <include file="$(find plantbot)/launch/amcl.launch">
+    <arg name="initial_pose_x" default="-3.0"/>
+    <arg name="initial_pose_y" default="1.0"/>
+  </include>
+
+  <include file="$(find turtlebot3_bringup)/launch/turtlebot3_remote.launch">
+    <arg name="model" value="waffle_pi" />
+  </include>
+  
+  <node pkg="rviz" type="rviz" name="rviz" required="true" args="-d $(find plantbot)/rviz/navigation.rviz"/>
+
+  <node pkg="plantbot" type="coords_poller.py" name="coords_poller" output="screen">
+    <param name="do_polling" value="true" />
+    <param name="min_radius" value="0.8" />
+  </node>
+
+</launch>

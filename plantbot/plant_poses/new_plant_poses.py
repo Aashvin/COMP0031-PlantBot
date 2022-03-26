@@ -19,37 +19,12 @@ from move_base_msgs.msg import MoveBaseAction
 import json
 import numpy as np
 import time
+import math
 
 
 def callback(data):
     global pub
     for box in data.bounding_boxes:
-        # time.sleep(10)
-        # print("stopping explore")
-        # client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
-        # client.wait_for_server()
-        # os.system("rosnode kill /explore")
-        # client.cancel_all_goals()
-        # print("counting to 10")
-        # time.sleep(10)
-        # print("time up")
-        # pub.publish("start")
-        # client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
-        # client.wait_for_server()
-        # os.system("rosnode kill /explore")
-        # client.cancel_all_goals()
-        # print("counting to 5")
-        # time.sleep(5)
-        # print("time up")
-        # os.system("roslaunch explore_lite explore.launch")
-        # print("explore node launched again")
-#        rospy.loginfo(
-#            "Xmin: {}, Xmax: {} Ymin: {}, Ymax: {}".format(
-#                box.xmin, box.xmax, box.ymin, box.ymax
-#            )
-#        )
-        # print(box.xmax, box.xmin)
-        # print(img.width)
 
         rospy.loginfo("{}, {}".format(box.id, box.Class))
         if box.Class == "pottedplant":
@@ -65,39 +40,55 @@ def callback(data):
                 client.cancel_all_goals()
             print("FOUND PLANT")
             img = rospy.wait_for_message('/camera/rgb/image_raw', Image, timeout=None)
+            print(img.width)
 
             box_mid = (box.xmax + box.xmin) / 2
             diff = box_mid - (img.width/2)
             print(f"DIFF: {diff}")
             cmd_vel = rospy.Publisher('cmd_vel', Twist, queue_size=10)
             move_cmd = Twist()
-            if abs(diff) > 50:
-                if diff > 0: # box is on right side of middle, move clockwise
-                    move_cmd.angular.z = 0
-                    move_cmd.angular.z = -0.0872665
-                    # move_cmd.angular.z = -0.01
-                elif diff < 0: # box is on left side of middle, move anticlockwise
-                    move_cmd.angular.z = 0
-                    move_cmd.angular.z = 0.0872665
-                    # move_cmd.angular.z = 0.01
-                else:
-                    print("should not be here")
+
+
+            if box_mid < (img.width / 2):
+                # if on left side
+                angle = (box_mid / (img.width / 2)) * math.radians(31.1)
             else:
-                global move_to_plant
-                move_to_plant = True
-                move_cmd.angular.z = 0
-                scan_data = rospy.wait_for_message('/scan', LaserScan, timeout=None)
-                scan_val = scan_data.ranges[0]
-                if scan_val > 1:
-                    move_cmd.linear.x = 0.2
-                else:
-                    print("in front of plant...?")
-                    global plant_reached
-                    plant_reached = True
-                    move_to_plant = False
-                    move_cmd.linear.x = 0
+                # if on right side
+                angle = ((box_mid / (img.width / 2)) * math.radians(31.1)) - math.radians(31.1)
+
+            print("ANGLE", angle)
+            move_cmd.angular.z = angle / 2
+
+            # if abs(diff) > 50:
+                # if diff > 0: # box is on right side of middle, move clockwise
+                    # move_cmd.angular.z = 0
+                    # move_cmd.angular.z = -0.0872665
+                    # move_cmd.angular.z = -0.01
+                # elif diff < 0: # box is on left side of middle, move anticlockwise
+                    # move_cmd.angular.z = 0
+                    # move_cmd.angular.z = 0.0872665
+                    # move_cmd.angular.z = 0.01
+                # else:
+                    # print("should not be here")
+            # else:
+                # global move_to_plant
+                # move_to_plant = True
+                # move_cmd.angular.z = 0
+                # scan_data = rospy.wait_for_message('/scan', LaserScan, timeout=None)
+                # scan_val = scan_data.ranges[0]
+                # if scan_val > 1:
+                    # move_cmd.linear.x = 0.2
+                # else:
+                    # print("in front of plant...?")
+                    # global plant_reached
+                    # plant_reached = True
+                    # move_cmd.linear.x = 0
 
             cmd_vel.publish(move_cmd)
+            time.sleep(2)
+            move_cmd.angular.z = 0
+            cmd_vel.publish(move_cmd)
+
 
             msg = rospy.wait_for_message('/odom', Odometry, timeout=None)
 
@@ -123,9 +114,6 @@ def main():
     f.close()
 
     while not rospy.is_shutdown():
-        rospy.init_node('listener', anonymous=True)
-        rospy.Subscriber('/darknet_ros/bounding_boxes/', BoundingBoxes , callback)
-        pub = rospy.Publisher('start_explore', String, queue_size=10)
         if move_to_plant == True:
             cmd_vel = rospy.Publisher('cmd_vel', Twist, queue_size=10)
             move_cmd = Twist()
@@ -143,6 +131,9 @@ def main():
             pub.publish("start")
             plant_reached = False
             exploreStopped = False
+        rospy.init_node('listener', anonymous=True)
+        rospy.Subscriber('/darknet_ros/bounding_boxes/', BoundingBoxes , callback)
+        pub = rospy.Publisher('start_explore', String, queue_size=10)
         rospy.spin()
 
 

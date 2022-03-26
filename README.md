@@ -13,7 +13,6 @@
   <li>Gazebo
 </ul>
 
-
 ## Setup
 
 Clone the repository:
@@ -30,31 +29,62 @@ $ export ROS_PACKAGE_PATH=${ROS_PACKAGE_PATH}:$(pwd)
 $ rospack profile
 ```
 
-## Launch Options
+## Mapping and Finding Plants Phase
+
+### Adjust the pretrained weights used by YOLO:
+
+Change the `default` parameter on line 14 of `plantbot/launch/darknet_ros.launch` line 14 to one of the following YAML files:
+<ul>
+  <li> $(find darknet_ros)/config/yolov2.yaml </li>
+  <li> $(find darknet_ros)/config/yolov2-tiny.yaml </li>
+  <li> $(find darknet_ros)/config/yolov3.yaml </li>
+  <li> $(find darknet_ros)/config/yolov4.yaml </li>
+</ul>
 
 ### Source YOLO:
 
-#### YOLOv4
-
-``` shell
-$ source yolov4-ws/devel/setup.bash
+```shell
+$ source <your yolo_v4_ws>/devel/setup.bash
 ```
 
-#### YOLOv2 and YOLOv3
-
-Source the darknet (Make sure to install COCO weights) package setup file e.g.:
+### Export PlantBot to your ROS package path:
 
 ```shell
-$ source darknet_ws/devel/setup.bash
+$ cd COMP0031-PlantBot
+$ export ROS_PACKAGE_PATH=${ROS_PACKAGE_PATH}:$(pwd)
+$ rospack profile
+```
+
+### Export TurtleBot3 Model
+```shell
+$ export TURTLEBOT3_MODEL=waffle_pi
+```
+
+### Launch the mapping and finding plants phase:
+
+```shell
+$ roslaunch plantbot find_plants.launch
 ```
 and change `plantbot/launch/darknet_ros.launch` line 14 to the corresponding yaml file.
 
-After this, export the plantbot package into ROS_PACKAGE_PATH as shown in the steup step.
+## Watering Plants Phase
 
-### Launch the entire SLAM exploration procedure + YOLO:
+### Export PlantBot to your ROS package path:
 
 ```shell
-$ roslaunch plantbot plantbot_launch.launch
+$ cd COMP0031-PlantBot
+$ export ROS_PACKAGE_PATH=${ROS_PACKAGE_PATH}:$(pwd)
+$ rospack profile
+```
+
+### Export TurtleBot3 Model
+```shell
+$ export TURTLEBOT3_MODEL=waffle_pi
+```
+
+### Run the watering plants phase:
+```shell
+$ roslaunch plantbot water_plants.launch
 ```
 
 ## Repo Organization (In directory `plantbot`)
@@ -65,9 +95,12 @@ $ roslaunch plantbot plantbot_launch.launch
 + **move_base**: move_base for navigation stack implementation (requires TEB)
 + **navigation**: putting amcl and move_base together
 + **turtlebot3_house_pink**: launch the pink cylinder scenario in gazebo
++ **turtlebot3_slam**: launches the SLAM nodes and RVIZ for TurtleBot3
 + **plantbot_launch**: launches (plantbot) turtlebot_house3_pink, (explore_lite) explore_lite, (plantbot) move_base, (turtlebot3_slam) turtlebot3_slam
 + **darknet_ros**: YOLO for object classification
-
++ **pose_estimate**: pose_estimate node (for calculating plant position estimates) and coords_poller node (for receiving data raw pose data and writing the JSON and map files once mapping is done)
++ **find_plants**: launches plantbot_launch, pose_estimate
++ **water_plants**: launches (plantbot) turtlebot_house3_pink, (plantbot) move_base, (turtlebot3_bringup) turtlebot3_remote, (plantbot) amcl, (plantbot) coords_poller, saved map file from find_plants
 
 ### `maps`
 
@@ -106,21 +139,42 @@ The next goal will be polled and applied from the cyclic queue when the current 
 
 ### Subscribed Topics
 
-#### `coord_poller/register_goal` 
+Namespace: `coord_poller/`
 
-Parameter: `geometry_msgs/pose`
-
-Interface to register the pose into internal database
-
-#### `coord_poller/poll_one`
-
-Parameter: `std_msgs/Empty`
-
-Bootstrap the poller or force poller to poll for next goal even if the current goal is not being fulfilled. This will be useful for exploration layer to notify the end of process.
-
+|    topic   |  parameter |     description    |
+| --- | --- | --- |
+| `register_goal` | `geometry_msgs/pose` | Interface to register the pose into internal database |
+| `save` | `std_msgs/Empty` | Save the poses into json file. |
 
 ### Parameter
 
-#### `~min_radius` default=`1`
+| name  | description | default |
+| -- | -- | -- | 
+| `~min_radius` | The minimum radius between any two goals. | `1` |
+| `~do_polling` | Whether the poller should start polling when it launched | `false` |
 
-The minimum radius between any two goals.
+## `plant_poses/pose_estimate.py`
+
+Estimate the world coordinates of plants from YOLO bounding box's UV coordinates
+
+### Subscribed Topics
+
+Namespace: `plant_pose_estimate/`
+
+|    topic   |  parameter |     description    |
+| --- | --- | --- |
+|`pose` | `geometry_msgs/pose` | The estimated plant pose |
+|`up`| `std_msgs/empty` | Bring up the node, used after `plant_pose_estimate/down`|
+|`down`| `std_msgs/empty` | Pause the node |
+
+### Parameters
+
+| name | description | default |
+|--|--|--|
+| `~horizontal_fov` | Camera's horizontal field of view | `62.2` |
+| `~img_width` | Horizontal width in pixel of captured image | `3280` |
+| `~half_ray_samples` | Number of additional laser scanning ray samples in the half interval used for estimation | `1` |
+| `~min_distance` | The minimum distance of clearance to the scanned plant (in meters) that robot must maintained  | `0.2` |
+| `~clearance_radius` | The maximum distance of clearance to the scanned plant that robot must maintained | `1.8` |
+| `~converge_check` | Number of iterations that used to converge the estimation | `15` |
+| `~max_scan_delta` | Maximum tolerance (in meters) on the difference between sampled scan ray, no effect if `~half_ray_samples=0` | `0.2` |
