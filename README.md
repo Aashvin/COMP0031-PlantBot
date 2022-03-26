@@ -7,8 +7,7 @@
   <li>AMCL: http://wiki.ros.org/amcl </li>
   <li>TEB Local Planner: http://wiki.ros.org/teb_local_planner </li>
   <li>Explore Lite: http://wiki.ros.org/explore_lite </li>
-  <li>YOLOv2 and YOLOv3: https://github.com/leggedrobotics/darknet_ros </li>
-  <li>YOLOv4: https://github.com/t1mkhuan9/yolov4-ros-noetic </li>
+  <li>YOLO: Please refer to yolo-configs/README.md
   <li>RVIZ
   <li>Gazebo
 </ul>
@@ -38,7 +37,9 @@ Change the `default` parameter on line 14 of `plantbot/launch/darknet_ros.launch
   <li> $(find darknet_ros)/config/yolov2.yaml </li>
   <li> $(find darknet_ros)/config/yolov2-tiny.yaml </li>
   <li> $(find darknet_ros)/config/yolov3.yaml </li>
+  <li> $(find darknet_ros)/config/yolov3-tiny.yaml </li>
   <li> $(find darknet_ros)/config/yolov4.yaml </li>
+  <li> $(find darknet_ros)/config/yolov4-tiny.yaml </li>
 </ul>
 
 ### Source YOLO:
