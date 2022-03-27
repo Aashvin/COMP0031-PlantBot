@@ -1,0 +1,30 @@
+<launch>
+    <!-- Arguments -->
+    <arg name="model" default="$(env TURTLEBOT3_MODEL)" doc="model type [burger, waffle, waffle_pi]"/>
+
+    <include file="$(find plantbot)/launch/test_world_scenario.launch"></include>
+
+    <!-- Turtlebot3 -->
+    <include file="$(find turtlebot3_bringup)/launch/turtlebot3_remote.launch">
+        <arg name="model" value="$(arg model)" />
+    </include>
+
+    <include file="$(find plantbot)/launch/darknet_ros.launch"></include>
+
+    <node pkg="plantbot" name="pose_estimate" type="pose_estimate.py" output="screen">
+        <rosparam file="$(find plantbot)/param/pose_estimate_params.yaml" command="load"/>
+        <param name="converge_check" value="10" />
+        <param name="half_ray_samples" value="1" />
+        <param name="clearance_radius" value="0"/>
+    </node>
+
+    <node pkg="plantbot" type="pose_data_collector.py" name="pose_data_collector" output="screen">
+        <param name="no_target_sample" value="100" />
+        <remap from="/pose_data_collector/ingress" to="/plant_pose_estimate/pose"/>
+    </node>
+
+    <node pkg="plantbot" type="dummy_controller.py" name="dummy_controller" output="screen">
+        <param name="deg_per_sec" value="15" />
+        <param name="frequency" value="10" />
+    </node>
+</launch>

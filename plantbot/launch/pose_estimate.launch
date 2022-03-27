@@ -5,5 +5,6 @@
     <node pkg="plantbot" type="coords_poller.py" name="coords_poller" output="screen">
         <param name="do_polling" value="false" />
         <param name="min_radius" value="0.8" />
+        <remap from="/coord_poller/register_goal" to="/plant_pose_estimate/pose"/>
     </node>
 </launch>

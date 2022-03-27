@@ -15,7 +15,10 @@
   <node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)"/>
 
   <!-- AMCL -->
-  <include file="$(find plantbot)/launch/amcl.launch"/>
+  <include file="$(find plantbot)/launch/amcl.launch">
+    <arg name="initial_pose_x" default="-3.0"/>
+    <arg name="initial_pose_y" default="1.0"/>
+  </include>
 
   <!-- move_base -->
   <include file="$(find plantbot)/launch/move_base.launch">

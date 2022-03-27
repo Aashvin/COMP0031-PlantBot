@@ -44,18 +44,16 @@ class DistEstimate:
         for box in data.bounding_boxes:
             if box.Class != "pottedplant" or self.__scan is None or self.__odom_pose is None:
                 continue
-            # if box.Class != "pottedplant":
-            #     continue
             self.__is_plant_found = True
-            #self.__odom_pose = rospy.wait_for_message("/odom", Odometry, timeout=None).pose.pose
-            #self.__scan = rospy.wait_for_message("/scan", LaserScan, timeout=None)
+
             # calculate the bounding box's offset angle from the optical axis
             x_box = 0.5 * self.cam_hres - ((box.xmin + box.xmax)) / 2
             theta = math.atan(2 * x_box * self.__tan_hhfov / self.cam_hres)
             c_o = np.array([math.cos(theta), math.sin(theta), 0, 0])
 
             # apply a transformation from camera frame to scanner frame
-            v_o = (self.cam_R @ c_o - self.cam_V)
+            v_o = self.cam_R @ c_o + self.cam_V
+            v_o = v_o / np.linalg.norm(v_o)
 
             # calculate which scan line to use...
             phi = math.atan(v_o[1] / v_o[0])
@@ -63,15 +61,14 @@ class DistEstimate:
             idx = round(phi_clipped / self.__scan.angle_increment)
 
             # use additional ray to approximate
-            d = self.__scan.ranges[idx]
-            prev_measure = d
+            d = 0
+            prev_measure = self.__scan.ranges[idx]
             delta = 0
             for i in range(-self.samples_half_interval, self.samples_half_interval + 1):
                 measure = self.__scan.ranges[(idx + i) % len(self.__scan.ranges)]
                 delta = max(abs(prev_measure - measure), delta)
                 prev_measure = measure
                 d += measure
-            rospy.loginfo("i=%f, theta=%f, delta=%f, d=%f"%(idx, theta * 180 / math.pi, delta, x_box))
 
             # sanity check...
             if (d == float("inf")): 
@@ -83,6 +80,7 @@ class DistEstimate:
 
             # offset to make space
             d = d / (2 * self.samples_half_interval + 1) - self.clearance_radius
+            rospy.loginfo("i=%f, theta=%f, delta=%f, d=%f, u=%f"%(idx, theta * 180 / math.pi, d, delta, x_box))
             if (d < self.min_measure):
                 rospy.logwarn("Ignored due to unrealistic scan distance")
                 break
@@ -94,12 +92,14 @@ class DistEstimate:
                 self.__odom_pose.orientation.z,
                 self.__odom_pose.orientation.w
             ])
-            coord =  d * (R_q @ v_o) + self.base_R @ np.array([
+            p_tilde = self.base_R @ v_o + self.base_V
+            p_tilde = p_tilde / np.linalg.norm(p_tilde)
+            coord =  d * R_q @ p_tilde + np.array([
                 self.__odom_pose.position.x,
                 self.__odom_pose.position.y,
                 self.__odom_pose.position.z,
                 0
-            ]) + self.base_V
+            ])
 
             # stablizing the coordinates
             coord_d = np.linalg.norm(self.__stable_coord - coord)
@@ -117,10 +117,6 @@ class DistEstimate:
                 self.__stable_coord += (coord - self.__stable_coord) / self.__stable_count
             break
         self.__is_plant_found = False
-
-    # def __quarterion_rot(self, p, q):
-    #     q_prime = quaternion_inverse(q)
-    #     return quaternion_multiply(quaternion_multiply(q, p), q_prime)
 
     def __pull_down(self, _ = None):
         if self.__is_down:
@@ -160,7 +156,7 @@ class DistEstimate:
 
     
     def start(self):
-        self.plant_coord = rospy.Publisher("/coord_poller/register_goal", Pose, queue_size=5)
+        self.plant_coord = rospy.Publisher("plant_pose_estimate/pose", Pose, queue_size=5)
         rospy.Subscriber("plant_pose_estimate/down", Empty, self.__pull_down, queue_size=2)
         rospy.Subscriber("plant_pose_estimate/up", Empty, self.__pull_up, queue_size=2)
         retry = 20
@@ -168,7 +164,7 @@ class DistEstimate:
         while retry > 0:
             try:
                 (trans,rot) = tf_listener.lookupTransform('/base_scan', '/camera_link', rospy.Time(0))
-                (transb,rotb) = tf_listener.lookupTransform('/base_scan', '/base_link', rospy.Time(0))
+                (transb,rotb) = tf_listener.lookupTransform('/base_link', '/base_scan', rospy.Time(0))
                 self.cam_V = np.array([trans[0], trans[1], trans[2], 0])
                 self.base_V = np.array([transb[0], transb[1], transb[2], 0])
                 self.cam_R = tf.transformations.quaternion_matrix(rot)
@@ -191,9 +187,9 @@ if __name__ == "__main__":
     rospy.init_node('pose_estimate', anonymous=True)
     DistEstimate(
         hfov=rospy.get_param("~horizontal_fov", 62.2),
-        samples_half_interval=rospy.get_param("~half_ray_samples", 3),
+        samples_half_interval=rospy.get_param("~half_ray_samples", 0),
         min_measure=rospy.get_param("~min_distance", 0.2),
-        coord_stable_threshold=rospy.get_param("~converge_check", 20),
+        coord_stable_threshold=rospy.get_param("~converge_check", 10),
         max_delta=rospy.get_param("~max_scan_delta", 0.05),
-        clearance_radius=rospy.get_param("~clearance_radius", 1.8)
+        clearance_radius=rospy.get_param("~clearance_radius", 0)
     ).start()
