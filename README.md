@@ -102,6 +102,8 @@ $ roslaunch plantbot water_plants.launch
 + **pose_estimate**: pose_estimate node (for calculating plant position estimates) and coords_poller node (for receiving raw pose data and writing the JSON and map files once mapping is done)
 + **find_plants**: launches plantbot_launch, pose_estimate
 + **water_plants**: launches (plantbot) turtlebot_house3_pink, (plantbot) move_base, (turtlebot3_bringup) turtlebot3_remote, (plantbot) amcl, (plantbot) coords_poller, saved map file from find_plants
++ **turtlebot3_house_obstruction**: launches gazebo world with an example of a map used for dynamic obstruction testing
++ **water_plants_obstruction**: launches above file and runs the watering plants phase in the obstructed map for dynamic obstruction testing
 
 ### `maps`
 
