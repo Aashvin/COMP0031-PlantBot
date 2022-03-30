@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2020, Multi-robot Systems (MRS) group at Czech Technical University in Prague -->
 <?xml version="1.0" ?>
 <sdf version='1.4'>
   <model name="water_particle">      
